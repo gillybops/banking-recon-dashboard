@@ -1,0 +1,6 @@
+id,date,amount,reference,description
+SYS001,2024-02-01,1500.00,REF123,Payment received
+SYS002,2024-02-01,250.50,REF124,Service fee
+SYS003,2024-02-02,3000.00,REF125,Wire transfer
+SYS004,2024-02-02,150.00,REF126,Monthly subscription
+SYS005,2024-02-03,750.00,REF127,Refund processed
