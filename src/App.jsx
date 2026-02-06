@@ -11,6 +11,12 @@ function App() {
   const [systemTransactions, setSystemTransactions] = useState([]);
   const [bankTransactions, setBankTransactions] = useState([]);
   const [reconciliation, setReconciliation] = useState(null);
+  
+  const handleClear = () => {
+  setSystemTransactions([]);
+  setBankTransactions([]);
+  setReconciliation(null);
+};
 
   useEffect(() => {
     if (systemTransactions.length > 0 || bankTransactions.length > 0) {
@@ -23,9 +29,34 @@ function App() {
     <div>
       <Header />
       <div style={{ padding: '0 2rem', maxWidth: '1400px', margin: '0 auto' }}>
-        <h2 style={{ marginBottom: '1.5rem', color: '#1e293b' }}>
-          Upload Transaction Files
-        </h2>
+        <div style={{ 
+  display: 'flex', 
+  justifyContent: 'space-between', 
+  alignItems: 'center',
+  marginBottom: '1.5rem'
+}}>
+  <h2 style={{ margin: 0, color: '#1e293b' }}>
+    Upload Transaction Files
+  </h2>
+  {(systemTransactions.length > 0 || bankTransactions.length > 0) && (
+    <button
+      onClick={handleClear}
+      style={{
+        backgroundColor: '#dc2626',
+        color: 'white',
+        padding: '0.5rem 1rem',
+        borderRadius: '6px',
+        border: 'none',
+        cursor: 'pointer',
+        fontWeight: '500'
+      }}
+      onMouseOver={(e) => e.target.style.backgroundColor = '#b91c1c'}
+      onMouseOut={(e) => e.target.style.backgroundColor = '#dc2626'}
+    >
+      🗑️ Clear All
+    </button>
+  )}
+</div>
         
         <FileUpload 
           label="System Transactions (CSV)"
