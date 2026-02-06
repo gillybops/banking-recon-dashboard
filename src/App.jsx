@@ -5,6 +5,7 @@ import TransactionTable from './components/TransactionTable'
 import ReconciliationStats from './components/ReconciliationStats'
 import { matchTransactions } from './utils/matchingLogic'
 import './App.css'
+import ExportButton from './components/ExportButton'
 
 function App() {
   const [systemTransactions, setSystemTransactions] = useState([]);
@@ -43,6 +44,34 @@ function App() {
             </h2>
             
             <ReconciliationStats stats={reconciliation.stats} />
+            <div style={{ 
+  display: 'flex', 
+  gap: '1rem', 
+  marginBottom: '2rem',
+  flexWrap: 'wrap'
+}}>
+  {reconciliation.matched.length > 0 && (
+    <ExportButton
+      data={reconciliation.matched.map(m => m.system)}
+      filename="matched-transactions.csv"
+      label="Export Matched"
+    />
+  )}
+  {reconciliation.unmatchedSystem.length > 0 && (
+    <ExportButton
+      data={reconciliation.unmatchedSystem}
+      filename="system-exceptions.csv"
+      label="Export System Exceptions"
+    />
+  )}
+  {reconciliation.unmatchedBank.length > 0 && (
+    <ExportButton
+      data={reconciliation.unmatchedBank}
+      filename="bank-exceptions.csv"
+      label="Export Bank Exceptions"
+    />
+  )}
+</div>
 
             {reconciliation.matched.length > 0 && (
               <div style={{ marginBottom: '2rem' }}>
