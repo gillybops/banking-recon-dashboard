@@ -5,6 +5,7 @@ import TransactionTable from './components/TransactionTable'
 import ReconciliationStats from './components/ReconciliationStats'
 import ExportButton from './components/ExportButton'
 import SummaryExportButton from './components/SummaryExportButton'
+import SampleDataButtons from './components/SampleDataButtons'
 import AuditTrail from './components/AuditTrail'
 import { matchTransactions } from './utils/matchingLogic'
 import './App.css'
@@ -75,6 +76,8 @@ function App() {
             </button>
           )}
         </div>
+
+        <SampleDataButtons />
         
         <FileUpload 
           label="System Transactions (CSV)"
