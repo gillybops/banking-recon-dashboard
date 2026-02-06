@@ -3,10 +3,11 @@ import Header from './components/Header'
 import FileUpload from './components/FileUpload'
 import TransactionTable from './components/TransactionTable'
 import ReconciliationStats from './components/ReconciliationStats'
+import ExportButton from './components/ExportButton'
+import SummaryExportButton from './components/SummaryExportButton'
+import AuditTrail from './components/AuditTrail'
 import { matchTransactions } from './utils/matchingLogic'
 import './App.css'
-import ExportButton from './components/ExportButton'
-import AuditTrail from './components/AuditTrail'
 
 function App() {
   const [systemTransactions, setSystemTransactions] = useState([]);
@@ -14,30 +15,30 @@ function App() {
   const [reconciliation, setReconciliation] = useState(null);
   const [auditEvents, setAuditEvents] = useState([]);
   
-  const handleClear = () => {
-  setSystemTransactions([]);
-  setBankTransactions([]);
-  setReconciliation(null);
-  setAuditEvents([]);
-  addAuditEvent('All data cleared');
-};
+  const addAuditEvent = (action) => {
+    const timestamp = new Date().toLocaleTimeString('en-US', { 
+      hour12: false,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    });
+    setAuditEvents(prev => [...prev, { timestamp, action }]);
+  };
 
-const addAuditEvent = (action) => {
-  const timestamp = new Date().toLocaleTimeString('en-US', { 
-    hour12: false,
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  });
-  setAuditEvents(prev => [...prev, { timestamp, action }]);
-};
+  const handleClear = () => {
+    setSystemTransactions([]);
+    setBankTransactions([]);
+    setReconciliation(null);
+    setAuditEvents([]);
+    addAuditEvent('All data cleared');
+  };
 
   useEffect(() => {
     if (systemTransactions.length > 0 || bankTransactions.length > 0) {
       const result = matchTransactions(systemTransactions, bankTransactions);
       setReconciliation(result);
       if (result.stats.matchedCount > 0 || result.stats.unmatchedSystemCount > 0) {
-      addAuditEvent(`Reconciliation completed: ${result.stats.matchedCount} matched, ${result.stats.unmatchedSystemCount + result.stats.unmatchedBankCount} exceptions`);
+        addAuditEvent(`Reconciliation completed: ${result.stats.matchedCount} matched, ${result.stats.unmatchedSystemCount + result.stats.unmatchedBankCount} exceptions`);
       }
     }
   }, [systemTransactions, bankTransactions]);
@@ -47,33 +48,33 @@ const addAuditEvent = (action) => {
       <Header />
       <div style={{ padding: '0 2rem', maxWidth: '1400px', margin: '0 auto' }}>
         <div style={{ 
-  display: 'flex', 
-  justifyContent: 'space-between', 
-  alignItems: 'center',
-  marginBottom: '1.5rem'
-}}>
-  <h2 style={{ margin: 0, color: '#1e293b' }}>
-    Upload Transaction Files
-  </h2>
-  {(systemTransactions.length > 0 || bankTransactions.length > 0) && (
-    <button
-      onClick={handleClear}
-      style={{
-        backgroundColor: '#dc2626',
-        color: 'white',
-        padding: '0.5rem 1rem',
-        borderRadius: '6px',
-        border: 'none',
-        cursor: 'pointer',
-        fontWeight: '500'
-      }}
-      onMouseOver={(e) => e.target.style.backgroundColor = '#b91c1c'}
-      onMouseOut={(e) => e.target.style.backgroundColor = '#dc2626'}
-    >
-      🗑️ Clear All
-    </button>
-  )}
-</div>
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          alignItems: 'center',
+          marginBottom: '1.5rem'
+        }}>
+          <h2 style={{ margin: 0, color: '#1e293b' }}>
+            Upload Transaction Files
+          </h2>
+          {(systemTransactions.length > 0 || bankTransactions.length > 0) && (
+            <button
+              onClick={handleClear}
+              style={{
+                backgroundColor: '#dc2626',
+                color: 'white',
+                padding: '0.5rem 1rem',
+                borderRadius: '6px',
+                border: 'none',
+                cursor: 'pointer',
+                fontWeight: '500'
+              }}
+              onMouseOver={(e) => e.target.style.backgroundColor = '#b91c1c'}
+              onMouseOut={(e) => e.target.style.backgroundColor = '#dc2626'}
+            >
+              🗑️ Clear All
+            </button>
+          )}
+        </div>
         
         <FileUpload 
           label="System Transactions (CSV)"
@@ -92,6 +93,7 @@ const addAuditEvent = (action) => {
         />
 
         <AuditTrail events={auditEvents} />
+
         {reconciliation && (
           <>
             <h2 style={{ marginTop: '2rem', marginBottom: '1rem', color: '#1e293b' }}>
@@ -99,34 +101,39 @@ const addAuditEvent = (action) => {
             </h2>
             
             <ReconciliationStats stats={reconciliation.stats} />
+
             <div style={{ 
-  display: 'flex', 
-  gap: '1rem', 
-  marginBottom: '2rem',
-  flexWrap: 'wrap'
-}}>
-  {reconciliation.matched.length > 0 && (
-    <ExportButton
-      data={reconciliation.matched.map(m => m.system)}
-      filename="matched-transactions.csv"
-      label="Export Matched"
-    />
-  )}
-  {reconciliation.unmatchedSystem.length > 0 && (
-    <ExportButton
-      data={reconciliation.unmatchedSystem}
-      filename="system-exceptions.csv"
-      label="Export System Exceptions"
-    />
-  )}
-  {reconciliation.unmatchedBank.length > 0 && (
-    <ExportButton
-      data={reconciliation.unmatchedBank}
-      filename="bank-exceptions.csv"
-      label="Export Bank Exceptions"
-    />
-  )}
-</div>
+              display: 'flex', 
+              gap: '1rem', 
+              marginBottom: '2rem',
+              flexWrap: 'wrap'
+            }}>
+              <SummaryExportButton 
+                reconciliation={reconciliation}
+                auditEvents={auditEvents}
+              />
+              {reconciliation.matched.length > 0 && (
+                <ExportButton
+                  data={reconciliation.matched.map(m => m.system)}
+                  filename="matched-transactions.csv"
+                  label="Export Matched"
+                />
+              )}
+              {reconciliation.unmatchedSystem.length > 0 && (
+                <ExportButton
+                  data={reconciliation.unmatchedSystem}
+                  filename="system-exceptions.csv"
+                  label="Export System Exceptions"
+                />
+              )}
+              {reconciliation.unmatchedBank.length > 0 && (
+                <ExportButton
+                  data={reconciliation.unmatchedBank}
+                  filename="bank-exceptions.csv"
+                  label="Export Bank Exceptions"
+                />
+              )}
+            </div>
 
             {reconciliation.matched.length > 0 && (
               <div style={{ marginBottom: '2rem' }}>

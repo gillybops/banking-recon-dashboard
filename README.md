@@ -2,7 +2,7 @@
 
 A React-based transaction reconciliation tool demonstrating frontend development skills and financial services domain expertise.
 
-🔗 **Live Demo:** [recon.gilliannewton.com](https://recon.gilliannewton.com) *(will deploy shortly)*
+🔗 **Live Demo:** [recon.gilliannewton.com](https://recon.gilliannewton.com)
 
 ---
 
@@ -156,7 +156,7 @@ Financial Services Technology Professional
 - 💼 6 years in banking automation & testing
 - 🐍 Python developer (Selenium, process automation)
 - 🏦 Deep understanding of financial operations
-- 🌐 [gilliannewton.com](https://gilliannewton.com)
+- 🌐 [gilliannewton.com](https://recon.gilliannewton.com)
 - 💻 [GitHub: @gillybops](https://github.com/gillybops)
 
 ---
