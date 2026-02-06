@@ -6,22 +6,39 @@ import ReconciliationStats from './components/ReconciliationStats'
 import { matchTransactions } from './utils/matchingLogic'
 import './App.css'
 import ExportButton from './components/ExportButton'
+import AuditTrail from './components/AuditTrail'
 
 function App() {
   const [systemTransactions, setSystemTransactions] = useState([]);
   const [bankTransactions, setBankTransactions] = useState([]);
   const [reconciliation, setReconciliation] = useState(null);
+  const [auditEvents, setAuditEvents] = useState([]);
   
   const handleClear = () => {
   setSystemTransactions([]);
   setBankTransactions([]);
   setReconciliation(null);
+  setAuditEvents([]);
+  addAuditEvent('All data cleared');
+};
+
+const addAuditEvent = (action) => {
+  const timestamp = new Date().toLocaleTimeString('en-US', { 
+    hour12: false,
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+  setAuditEvents(prev => [...prev, { timestamp, action }]);
 };
 
   useEffect(() => {
     if (systemTransactions.length > 0 || bankTransactions.length > 0) {
       const result = matchTransactions(systemTransactions, bankTransactions);
       setReconciliation(result);
+      if (result.stats.matchedCount > 0 || result.stats.unmatchedSystemCount > 0) {
+      addAuditEvent(`Reconciliation completed: ${result.stats.matchedCount} matched, ${result.stats.unmatchedSystemCount + result.stats.unmatchedBankCount} exceptions`);
+      }
     }
   }, [systemTransactions, bankTransactions]);
 
@@ -60,14 +77,21 @@ function App() {
         
         <FileUpload 
           label="System Transactions (CSV)"
-          onFileLoaded={setSystemTransactions}
+          onFileLoaded={(data) => {
+            setSystemTransactions(data);
+            addAuditEvent(`Uploaded system transactions (${data.length} records)`);
+          }}
         />
         
-        <FileUpload 
+        <FileUpload
           label="Bank Statement (CSV)"
-          onFileLoaded={setBankTransactions}
+          onFileLoaded={(data) => {
+            setBankTransactions(data);
+            addAuditEvent(`Uploaded bank statement (${data.length} records)`);
+          }}
         />
 
+        <AuditTrail events={auditEvents} />
         {reconciliation && (
           <>
             <h2 style={{ marginTop: '2rem', marginBottom: '1rem', color: '#1e293b' }}>
