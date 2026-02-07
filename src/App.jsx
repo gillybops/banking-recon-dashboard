@@ -7,6 +7,7 @@ import ExportButton from './components/ExportButton'
 import SummaryExportButton from './components/SummaryExportButton'
 import SampleDataButtons from './components/SampleDataButtons'
 import AuditTrail from './components/AuditTrail'
+import EmptyState from './components/EmptyState'
 import { matchTransactions } from './utils/matchingLogic'
 import './App.css'
 
@@ -118,7 +119,9 @@ function App() {
           </div>
         )}
 
-
+        {!isProcessing && !reconciliation && systemTransactions.length === 0 && bankTransactions.length === 0 && (
+          <EmptyState />
+        )}
 
         {reconciliation && (
           <>
