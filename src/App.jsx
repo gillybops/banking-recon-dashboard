@@ -15,6 +15,7 @@ function App() {
   const [bankTransactions, setBankTransactions] = useState([]);
   const [reconciliation, setReconciliation] = useState(null);
   const [auditEvents, setAuditEvents] = useState([]);
+  const [isProcessing, setIsProcessing] = useState(false);
   
   const addAuditEvent = (action) => {
     const timestamp = new Date().toLocaleTimeString('en-US', { 
@@ -35,14 +36,20 @@ function App() {
   };
 
   useEffect(() => {
-    if (systemTransactions.length > 0 || bankTransactions.length > 0) {
+  if (systemTransactions.length > 0 || bankTransactions.length > 0) {
+    setIsProcessing(true);
+    
+    // Small delay to show loading state
+    setTimeout(() => {
       const result = matchTransactions(systemTransactions, bankTransactions);
       setReconciliation(result);
       if (result.stats.matchedCount > 0 || result.stats.unmatchedSystemCount > 0) {
         addAuditEvent(`Reconciliation completed: ${result.stats.matchedCount} matched, ${result.stats.unmatchedSystemCount + result.stats.unmatchedBankCount} exceptions`);
       }
-    }
-  }, [systemTransactions, bankTransactions]);
+      setIsProcessing(false);
+    }, 300);
+  }
+}, [systemTransactions, bankTransactions]);
 
   return (
     <div>
@@ -96,6 +103,22 @@ function App() {
         />
 
         <AuditTrail events={auditEvents} />
+        {isProcessing && (
+          <div style={{
+            backgroundColor: '#fef3c7',
+            border: '2px solid #fbbf24',
+            borderRadius: '8px',
+            padding: '1.5rem',
+            marginBottom: '2rem',
+            textAlign: 'center',
+            color: '#92400e',
+            fontWeight: '500'
+          }}>
+            ⏳ Processing reconciliation...
+          </div>
+        )}
+
+
 
         {reconciliation && (
           <>
