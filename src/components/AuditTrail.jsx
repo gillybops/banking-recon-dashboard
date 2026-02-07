@@ -1,6 +1,21 @@
 export default function AuditTrail({ events }) {
   if (!events || events.length === 0) return null;
 
+  const handleExport = () => {
+    const csvContent = [
+      'Timestamp,Action',
+      ...events.map(e => `"${e.timestamp}","${e.action}"`)
+    ].join('\n');
+    
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `audit-trail-${Date.now()}.csv`;
+    link.click();
+    window.URL.revokeObjectURL(url);
+  };
+
   return (
     <div style={{
       backgroundColor: '#f8fafc',
@@ -9,14 +24,38 @@ export default function AuditTrail({ events }) {
       padding: '1.5rem',
       marginBottom: '2rem'
     }}>
-      <h3 style={{ 
-        margin: '0 0 1rem 0', 
-        color: '#475569',
-        fontSize: '1rem',
-        fontWeight: '600'
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        marginBottom: '1rem'
       }}>
-        📋 Audit Trail
-      </h3>
+        <h3 style={{ 
+          margin: 0, 
+          color: '#475569',
+          fontSize: '1rem',
+          fontWeight: '600'
+        }}>
+          📋 Audit Trail
+        </h3>
+        <button
+          onClick={handleExport}
+          style={{
+            backgroundColor: '#64748b',
+            color: 'white',
+            padding: '0.4rem 0.75rem',
+            borderRadius: '4px',
+            border: 'none',
+            cursor: 'pointer',
+            fontSize: '0.75rem',
+            fontWeight: '500'
+          }}
+          onMouseOver={(e) => e.target.style.backgroundColor = '#475569'}
+          onMouseOut={(e) => e.target.style.backgroundColor = '#64748b'}
+        >
+          📥 Export Log
+        </button>
+      </div>
       <div style={{ 
         display: 'flex', 
         flexDirection: 'column', 
