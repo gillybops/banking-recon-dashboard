@@ -17,6 +17,7 @@ function App() {
   const [reconciliation, setReconciliation] = useState(null);
   const [auditEvents, setAuditEvents] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [fileInputKey, setFileInputKey] = useState(Date.now());
   
   const addAuditEvent = (action) => {
     const timestamp = new Date().toLocaleTimeString('en-US', { 
@@ -33,6 +34,7 @@ function App() {
     setBankTransactions([]);
     setReconciliation(null);
     setAuditEvents([]);
+    setFileInputKey(Date.now());
     addAuditEvent('All data cleared');
   };
 
@@ -88,6 +90,7 @@ function App() {
         <SampleDataButtons />
         
         <FileUpload 
+          key={`system-${fileInputKey}`}
           label="System Transactions (CSV)"
           onFileLoaded={(data) => {
             setSystemTransactions(data);
@@ -96,6 +99,7 @@ function App() {
         />
         
         <FileUpload
+          key={`bank-${fileInputKey}`}
           label="Bank Statement (CSV)"
           onFileLoaded={(data) => {
             setBankTransactions(data);
