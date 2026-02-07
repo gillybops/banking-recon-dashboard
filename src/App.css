@@ -1,3 +1,8 @@
+body {
+  background: linear-gradient(to bottom, #f8fafc 0%, #e2e8f0 100%);
+  min-height: 100vh;
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;

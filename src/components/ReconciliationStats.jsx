@@ -34,17 +34,32 @@ export default function ReconciliationStats({ stats }) {
 
 function StatCard({ title, value, color }) {
   return (
-    <div style={{
-      backgroundColor: 'white',
-      padding: '1.5rem',
-      borderRadius: '8px',
-      boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-      borderLeft: `4px solid ${color}`
-    }}>
+    <div 
+      style={{
+        backgroundColor: 'white',
+        padding: '1.5rem',
+        borderRadius: '8px',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+        borderLeft: `4px solid ${color}`,
+        transition: 'transform 0.2s, box-shadow 0.2s',
+        cursor: 'default'
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = 'translateY(-2px)';
+        e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+      }}
+    >
       <div style={{
         fontSize: '0.875rem',
         color: '#64748b',
-        marginBottom: '0.5rem'
+        marginBottom: '0.5rem',
+        textTransform: 'uppercase',
+        letterSpacing: '0.05em',
+        fontWeight: '600'
       }}>
         {title}
       </div>

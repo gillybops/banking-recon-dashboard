@@ -36,8 +36,18 @@ export default function FileUpload({ onFileLoaded, label }) {
       borderRadius: '8px',
       padding: '2rem',
       marginBottom: '1rem',
-      backgroundColor: '#f8fafc'
-    }}>
+      backgroundColor: '#f8fafc',
+      transition: 'border-color 0.2s, background-color 0.2s'
+    }}
+    onMouseEnter={(e) => {
+      e.currentTarget.style.borderColor = '#94a3b8';
+      e.currentTarget.style.backgroundColor = '#f1f5f9';
+    }}
+    onMouseLeave={(e) => {
+      e.currentTarget.style.borderColor = '#cbd5e1';
+      e.currentTarget.style.backgroundColor = '#f8fafc';
+    }}
+    >
       <label style={{
         display: 'block',
         marginBottom: '0.5rem',
