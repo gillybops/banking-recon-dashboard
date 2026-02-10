@@ -10,6 +10,9 @@ import AuditTrail from './components/AuditTrail'
 import EmptyState from './components/EmptyState'
 import { matchTransactions } from './utils/matchingLogic'
 import './App.css'
+import ReconciliationHistory from './components/ReconciliationHistory'
+import { useReconciliationHistory } from './services/useReconciliationHistory'
+import { reconciliationAPI } from './services/api'
 
 function App() {
   const [systemTransactions, setSystemTransactions] = useState([]);
@@ -18,6 +21,7 @@ function App() {
   const [auditEvents, setAuditEvents] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [fileInputKey, setFileInputKey] = useState(Date.now());
+  const { saveEntry } = useReconciliationHistory();
   
   const addAuditEvent = (action) => {
     const timestamp = new Date().toLocaleTimeString('en-US', { 
@@ -42,10 +46,18 @@ function App() {
   if (systemTransactions.length > 0 || bankTransactions.length > 0) {
     setIsProcessing(true);
     
-    // Small delay to show loading state
     setTimeout(() => {
       const result = matchTransactions(systemTransactions, bankTransactions);
       setReconciliation(result);
+      
+      // Save to history
+      saveEntry(result);
+      
+      // Optional: Save to backend API (will show error if backend not available)
+      reconciliationAPI.saveReconciliation(result).catch(() => {
+        // Silently fail if backend not available - history is still saved locally
+      });
+      
       if (result.stats.matchedCount > 0 || result.stats.unmatchedSystemCount > 0) {
         addAuditEvent(`Reconciliation completed: ${result.stats.matchedCount} matched, ${result.stats.unmatchedSystemCount + result.stats.unmatchedBankCount} exceptions`);
       }
@@ -223,6 +235,7 @@ function App() {
             )}
           </>
         )}
+        <ReconciliationHistory />
       </div>
     </div>
   )

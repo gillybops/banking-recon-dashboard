@@ -38,6 +38,32 @@ BNK005,2024-02-03,500.00,REF999,Unknown transaction`;
       padding: '1rem',
       marginBottom: '1.5rem'
     }}>
+      {/* CSV Format Section */}
+      <div style={{ marginBottom: '1rem' }}>
+        <div style={{ 
+          fontWeight: '600', 
+          color: '#1e40af',
+          marginBottom: '0.5rem',
+          fontSize: '0.875rem'
+        }}>
+          📋 CSV File Format Required:
+        </div>
+        <div style={{
+          fontFamily: 'monospace',
+          fontSize: '0.75rem',
+          backgroundColor: 'white',
+          padding: '0.6rem',
+          borderRadius: '4px',
+          color: '#334155',
+          overflowX: 'auto',
+          border: '1px solid #bfdbfe'
+        }}>
+          id,date,amount,reference,description<br/>
+          SYS001,2024-02-01,1500.00,REF123,Payment received
+        </div>
+      </div>
+
+      {/* Sample Data Download Section */}
       <p style={{ 
         margin: '0 0 0.75rem 0', 
         color: '#1e40af',

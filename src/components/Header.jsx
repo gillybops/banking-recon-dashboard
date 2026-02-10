@@ -10,7 +10,7 @@ export default function Header() {
         Banking Reconciliation Dashboard
       </h1>
       <p style={{ margin: '0.5rem 0 0 0', opacity: 0.9 }}>
-        Transaction Matching & Exception Management v1.0
+        Transaction Matching & Exception Management v2.0
       </p>
     </header>
   );
