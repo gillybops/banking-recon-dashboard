@@ -46,7 +46,7 @@ BNK005,2024-02-03,500.00,REF999,Unknown transaction`;
       }}>
         💡 Need sample data to test? Download example CSV files:
       </p>
-      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
         <button
           onClick={() => downloadSample('system')}
           style={{
