@@ -184,7 +184,6 @@ Financial Services Technology Professional
 - 🐍 Python developer (Selenium, process automation)
 - 🏦 Deep understanding of financial operations
 - ⚛️ React developer (learning sprint)
-- 🌐 [gilliannewton.com](https://gilliannewton.com)
 - 💻 [GitHub: @gillybops](https://github.com/gillybops)
 
 ---
